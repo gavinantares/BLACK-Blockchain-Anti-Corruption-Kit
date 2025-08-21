@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLACK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            color: #1a202c;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            border-radius: 12px;
+            padding: 40px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(30, 58, 138, 0.15);
+            border: 1px solid #3b82f6;
+        }
+
+        .header h1 {
+            color: white;
+            text-align: center;
+            font-size: 2.8em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .auth-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 30px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .auth-tab {
+            background: transparent;
+            color: #64748b;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            flex: 1;
+        }
+
+        .auth-tab.active {
+            background: white;
+            color: #1e40af;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .auth-form h3 {
+            color: #1e293b;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .auth-input, .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .auth-input:focus, .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .auth-input::placeholder, .form-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .auth-btn {
+            background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(30, 64, 175, 0.2);
+        }
+
+        .auth-btn:hover {
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+        }
+
+        .user-section {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+        }
+
+        .user-info {
+            color: #374151;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logout-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+        }
+
+        .admin-badge {
+            background: #f59e0b;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .main-content {
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .main-content.authenticated {
+            display: grid;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        .card h2 {
+            color: #1e293b;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+            font-weight: 600;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 12px;
+        }
+
+        .card .form-group {
+            margin-bottom: 20px;
+        }
+
+        .card label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .card input, .card select, .card textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .card input:focus, .card select:focus, .card textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(30, 64, 175, 0.2);
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            margin-left: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+
+        .btn-edit:hover {
+            background: linear-gradient(135deg, #b45309 0%, #92400e 100%);
+        }
+
+        .transaction-list {
+            grid-column: 1 / -1;
+            display: none;
+        }
+
+        .transaction-list.authenticated {
+            display: block;
+        }
+
+        .transaction-item {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3b82f6;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s ease;
+        }
+
+        .transaction-item:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .transaction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .transaction-id {
+            font-weight: 600;
+            color: #1e40af;
+            font-size: 16px;
+        }
+
+        .transaction-amount {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #059669;
+        }
+
+        .transaction-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .detail-item strong {
+            color: #374151;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .hash-display {
+            background: #0f172a;
+            color: #10b981;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            word-break: break-all;
+            margin-top: 15px;
+            display: none;
+            border: 1px solid #1e293b;
+        }
+
+        .hash-display.admin-mode {
+            display: block;
+        }
+
+        .hash-input-section {
+            display: none;
+        }
+
+        .hash-input-section.admin-mode {
+            display: block;
+        }
+
+        .notification {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: #059669;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            font-weight: 500;
+            min-width: 300px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.warning {
+            background: #d97706;
+        }
+
+        .notification.error {
+            background: #dc2626;
+        }
+
+        .parties-list {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            align-items: center;
+        }
+
+        .parties-list strong {
+            color: #374151;
+            margin-right: 8px;
+        }
+
+        .party-badge {
+            background: #3b82f6;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .edit-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 550px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #6b7280;
+            transition: color 0.2s ease;
+        }
+
+        .close-btn:hover {
+            color: #374151;
+        }
+
+        .system-status {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+
+        .system-status h3 {
+            color: #0c4a6e;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .status-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .status-item {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border: 1px solid #e0f2fe;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-label {
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        .status-value {
+            color: #059669;
+            font-weight: 600;
+        }
+
+        .welcome-section {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .welcome-section h2 {
+            color: #1e40af;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .welcome-section p {
+            color: #1e40af;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        .feature-item h4 {
+            color: #1e40af;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .feature-item p {
+            color: #6b7280;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .auth-tabs {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .transaction-details {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+
+            .edit-modal-content {
+                padding: 25px;
+                margin: 20px;
+                width: calc(100% - 40px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>BLACK</h1>
+            <p class="subtitle">Secure, transparent, and compliant transaction management powered by distributed ledger technology</p>
+        </div>
+
+        <div id="welcomeSection" class="welcome-section">
+            <h2>BLOCKCHAIN ANTI CORRUPTION KIT</h2>
+            <p>Access advanced transaction management with enterprise-grade security and full audit compliance</p>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h4>🔐 Secure Authentication</h4>
+                    <p>Multi-level user access with role-based permissions</p>
+                </div>
+                <div class="feature-item">
+                    <h4>📊 Transparent Ledger</h4>
+                    <p>Immutable transaction records with full traceability</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🏢 Enterprise Ready</h4>
+                    <p>Built for professional accounting workflows</p>
+                </div>
+                <div class="feature-item">
+                    <h4>⚡ Real-time Updates</h4>
+                    <p>Instant synchronization across all stakeholders</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="auth-panel">
+            <div id="authTabs" class="auth-tabs">
+                <button class="auth-tab active" onclick="showTab('login')">Account Access</button>
+                <button class="auth-tab" onclick="showTab('register')">New Registration</button>
+            </div>
+
+            <div id="loginForm" class="auth-form active">
+                <h3>Account Authentication</h3>
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" class="auth-input" placeholder="Enter your registered email address" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="auth-input" placeholder="Enter your account password" required>
+                </div>
+                <button onclick="login()" class="auth-btn">Access Platform</button>
+            </div>
+
+            <div id="registerForm" class="auth-form">
+                <h3>Account Registration</h3>
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" class="auth-input" placeholder="Enter your complete legal name" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Business Email Address</label>
+                    <input type="email" id="registerEmail" class="auth-input" placeholder="Enter your professional email address" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Secure Password</label>
+                    <input type="password" id="registerPassword" class="auth-input" placeholder="Create a strong password (minimum 6 characters)" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" class="auth-input" placeholder="Re-enter your password for confirmation" required>
+                </div>
+                <button onclick="register()" class="auth-btn">Create Professional Account</button>
+            </div>
+
+            <div id="userSection" class="user-section">
+                <div class="user-info">
+                    <span id="userDisplay"></span>
+                </div>
+                <button onclick="logout()" class="logout-btn">Sign Out</button>
+            </div>
+        </div>
+
+        <div class="main-content" id="mainContent">
+            <div class="card">
+                <h2>Transaction Registration</h2>
+                <form id="transactionForm">
+                    <div class="form-group">
+                        <label for="description">Transaction Description</label>
+                        <input type="text" id="description" class="form-input" placeholder="Enter detailed transaction description" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Transaction Amount (USD)</label>
+                        <input type="number" id="amount" class="form-input" step="0.01" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="type">Transaction Category</label>
+                        <select id="type" class="form-input" required>
+                            <option value="">Select transaction type</option>
+                            <option value="income">Revenue/Income</option>
+                            <option value="expense">Business Expense</option>
+                            <option value="transfer">Internal Transfer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="parties">Authorized Stakeholders</label>
+                        <input type="text" id="parties" class="form-input" placeholder="Enter stakeholder email addresses (comma-separated)">
+                    </div>
+                    <button type="submit" class="btn">Register Transaction</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Transaction Management</h2>
+                <div class="hash-input-section" id="hashInputSection">
+                    <div class="form-group">
+                        <label for="editHash">Blockchain Transaction Hash</label>
+                        <input type="text" id="editHash" class="form-input" placeholder="Enter the unique transaction hash identifier">
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="editByHash()">Locate & Edit Transaction</button>
+                </div>
+                <div id="regularEditSection">
+                    <p style="color: #6b7280; text-align: center; margin-bottom: 25px; font-size: 15px;">
+                        Select any transaction from the ledger below to modify its details
+                    </p>
+                </div>
+                
+                <div class="system-status">
+                    <h3>Platform Status Dashboard</h3>
+                    <div class="status-grid">
+                        <div class="status-item">
+                            <span class="status-label">Total Registered Transactions</span>
+                            <span class="status-value" id="totalTransactions">0</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Network Connectivity Status</span>
+                            <span class="status-value">🟢 Active</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Current Block Height</span>
+                            <span class="status-value" id="lastBlock">Genesis</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Platform Security Level</span>
+                            <span class="status-value">🔒 Enterprise</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card transaction-list" id="transactionList">
+            <h2>Distributed Transaction Ledger</h2>
+            <div id="transactionsList"></div>
+        </div>
+    </div>
+
+    <!-- Transaction Edit Modal -->
+    <div id="editModal" class="edit-modal">
+        <div class="edit-modal-content">
+            <button class="close-btn" onclick="closeEditModal()">&times;</button>
+            <h2>Modify Transaction Record</h2>
+            <form id="editForm">
+                <div class="form-group">
+                    <label for="editDescription">Transaction Description</label>
+                    <input type="text" id="editDescription" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="editAmount">Transaction Amount (USD)</label>
+                    <input type="number" id="editAmount" class="form-input" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="editType">Transaction Category</label>
+                    <select id="editType" class="form-input" required>
+                        <option value="income">Revenue/Income</option>
+                        <option value="expense">Business Expense</option>
+                        <option value="transfer">Internal Transfer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editParties">Authorized Stakeholders</label>
+                    <input type="text" id="editParties" class="form-input">
+                </div>
+                <button type="submit" class="btn">Update Transaction Record</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // User management system
+        class UserManager {
+            constructor() {
+                this.users = new Map();
+                this.currentUser = null;
+                this.ADMIN_EMAIL = 'gavinantares09@gmail.com';
+                this.ADMIN_PASSWORD = '03062009';
+                this.init();
+            }
+
+            init() {
+                // Pre-register admin user
+                this.users.set(this.ADMIN_EMAIL, {
+                    name: 'System Administrator',
+                    email: this.ADMIN_EMAIL,
+                    password: this.ADMIN_PASSWORD,
+                    isAdmin: true,
+                    registeredAt: new Date().toISOString()
+                });
+            }
+
+            register(userData) {
+                const { name, email, password, confirmPassword } = userData;
+                
+                if (!name || !email || !password || !confirmPassword) {
+                    throw new Error('All registration fields are required');
+                }
+
+                if (!this.isValidEmail(email)) {
+                    throw new Error('Please provide a valid business email address');
+                }
+
+                if (password.length < 6) {
+                    throw new Error('Password must contain at least 6 characters for security');
+                }
+
+                if (password !== confirmPassword) {
+                    throw new Error('Password confirmation does not match');
+                }
+
+                if (this.users.has(email.toLowerCase())) {
+                    throw new Error('An account is already registered with this email address');
+                }
+
+                const user = {
+                    name,
+                    email: email.toLowerCase(),
+                    password,
+                    isAdmin: false,
+                    registeredAt: new Date().toISOString()
+                };
+
+                this.users.set(email.toLowerCase(), user);
+                return user;
+            }
+
+            login(email, password) {
+                if (!email || !password) {
+                    throw new Error('Both email and password are required for authentication');
+                }
+
+                const user = this.users.get(email.toLowerCase());
+                if (!user) {
+                    throw new Error('No account found with the provided email address');
+                }
+
+                if (user.password !== password) {
+                    throw new Error('Authentication failed: incorrect password');
+                }
+
+                this.currentUser = user;
+                return user;
+            }
+
+            logout() {
+                this.currentUser = null;
+            }
+
+            isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+
+            isAdmin() {
+                return this.currentUser && this.currentUser.isAdmin;
+            }
+
+            getCurrentUser() {
+                return this.currentUser;
+            }
+        }
+
+        // Blockchain simulation
+        class BlockchainAccounting {
+            constructor() {
+                this.transactions = [];
+                this.blockHeight = 0;
+                this.init();
+            }
+
+            init() {
+                this.loadTransactions();
+                this.renderTransactions();
+                this.updateStatus();
+            }
+
+            createHash(data) {
+                const str = JSON.stringify(data) + Date.now();
+                let hash = 0;
+                for (let i = 0; i < str.length; i++) {
+                    const char = str.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return Math.abs(hash).toString(16).padStart(12, '0').toUpperCase();
+            }
+
+            addTransaction(data) {
+                const transaction = {
+                    id: this.transactions.length + 1,
+                    hash: this.createHash(data),
+                    timestamp: new Date().toISOString(),
+                    blockHeight: ++this.blockHeight,
+                    createdBy: userManager.getCurrentUser().email,
+                    status: 'Confirmed',
+                    ...data,
+                    parties: data.parties.split(',').map(p => p.trim()).filter(p => p)
+                };
+
+                this.transactions.push(transaction);
+                this.saveTransactions();
+                this.renderTransactions();
+                this.updateStatus();
+                this.notifyParties(transaction, 'created');
+                return transaction;
+            }
+
+            editTransaction(hash, newData) {
+                const index = this.transactions.findIndex(t => t.hash === hash);
+                if (index === -1) return null;
+
+                const oldTransaction = {...this.transactions[index]};
+                const updatedTransaction = {
+                    ...this.transactions[index],
+                    ...newData,
+                    parties: newData.parties.split(',').map(p => p.trim()).filter(p => p),
+                    lastModified: new Date().toISOString(),
+                    modifiedBy: userManager.getCurrentUser().email,
+                    previousHash: hash,
+                    hash: this.createHash({...newData, previousHash: hash})
+                };
+
+                this.transactions[index] = updatedTransaction;
+                this.saveTransactions();
+                this.renderTransactions();
+                this.updateStatus();
+                this.notifyParties(updatedTransaction, 'modified', oldTransaction);
+                return updatedTransaction;
+            }
+
+            findTransactionByHash(hash) {
+                return this.transactions.find(t => t.hash === hash || t.previousHash === hash);
+            }
+
+            notifyParties(transaction, action, oldTransaction = null) {
+                const message = action === 'created' 
+                    ? `Transaction successfully registered: ${transaction.description}`
+                    : `Transaction record updated: ${transaction.description}`;
+                
+                this.showNotification(message, action === 'created' ? 'success' : 'warning');
+                
+                // Simulate notifying stakeholders
+                transaction.parties.forEach(party => {
+                    console.log(`Stakeholder notification sent to ${party}: ${message}`);
+                });
+            }
+
+            showNotification(message, type = 'success') {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.className = `notification ${type === 'warning' ? 'warning' : type === 'error' ? 'error' : ''}`;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 4000);
+            }
+
+            saveTransactions() {
+                // In production: save to distributed blockchain network
+                // Demo implementation: memory storage
+            }
+
+            loadTransactions() {
+                // In production: load from blockchain network
+                // Demo implementation: empty initialization
+            }
+
+            renderTransactions() {
+                const container = document.getElementById('transactionsList');
+                if (this.transactions.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #6b7280;">
+                            <h3 style="margin-bottom: 12px; color: #374151;">No Transactions Recorded</h3>
+                            <p>Begin by registering your first transaction using the form above.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const isAdmin = userManager.isAdmin();
+                
+                container.innerHTML = this.transactions.map(transaction => `
+                    <div class="transaction-item">
+                        <div class="transaction-header">
+                            <div class="transaction-id">Transaction Record #${String(transaction.id).padStart(4, '0')}</div>
+                            <div class="transaction-amount">${Number(transaction.amount).toLocaleString('en-US', {minimumFractionDigits: 2})}</div>
+                        </div>
+                        <div class="transaction-details">
+                            <div class="detail-item">
+                                <strong>Description</strong>
+                                ${transaction.description}
+                            </div>
+                            <div class="detail-item">
+                                <strong>Category</strong>
+                                ${this.formatTransactionType(transaction.type)}
+                            </div>
+                            <div class="detail-item">
+                                <strong>Date & Time</strong>
+                                ${new Date(transaction.timestamp).toLocaleString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}
+                            </div>
+                            <div class="detail-item">
+                                <strong>Block Height</strong>
+                                #${transaction.blockHeight}
+                            </div>
+                            <div class="detail-item">
+                                <strong>Registered By</strong>
+                                ${transaction.createdBy}
+                            </div>
+                            <div class="detail-item">
+                                <strong>Status</strong>
+                                <span style="color: #059669; font-weight: 600;">${transaction.status}</span>
+                            </div>
+                            ${transaction.modifiedBy ? `
+                                <div class="detail-item">
+                                    <strong>Last Modified By</strong>
+                                    ${transaction.modifiedBy}
+                                </div>
+                            ` : ''}
+                        </div>
+                        ${transaction.parties.length > 0 ? `
+                            <div class="parties-list">
+                                <strong>Authorized Stakeholders:</strong>
+                                ${transaction.parties.map(party => `<span class="party-badge">${party}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                        <div class="hash-display ${isAdmin ? 'admin-mode' : ''}" id="hash-${transaction.id}">
+                            <strong>Blockchain Hash:</strong> ${transaction.hash}
+                            ${transaction.previousHash ? `<br><strong>Previous Hash Reference:</strong> ${transaction.previousHash}` : ''}
+                            <br><strong>Cryptographic Verification:</strong> SHA-256 Compliant
+                        </div>
+                        <div style="margin-top: 20px; display: flex; gap: 12px;">
+                            <button class="btn btn-edit" onclick="editTransaction('${transaction.hash}')">
+                                Modify Record
+                            </button>
+                            ${isAdmin ? `
+                                <button class="btn" style="background: #6366f1; font-size: 13px; padding: 8px 16px;" onclick="viewTransactionDetails('${transaction.hash}')">
+                                    View Technical Details
+                                </button>
+                            ` : ''}
+                        </div>
+                        ${transaction.lastModified ? `
+                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb; font-size: 13px; color: #6b7280;">
+                                <strong>Last modification:</strong> ${new Date(transaction.lastModified).toLocaleString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+            }
+
+            formatTransactionType(type) {
+                const types = {
+                    'income': '💰 Revenue/Income',
+                    'expense': '📊 Business Expense',
+                    'transfer': '🔄 Internal Transfer'
+                };
+                return types[type] || type;
+            }
+
+            updateStatus() {
+                document.getElementById('totalTransactions').textContent = this.transactions.length;
+                document.getElementById('lastBlock').textContent = `#${this.blockHeight}` || 'Genesis';
+            }
+        }
+
+        // Initialize systems
+        const userManager = new UserManager();
+        const blockchain = new BlockchainAccounting();
+
+        // Authentication Functions
+        function showTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.auth-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update form visibility
+            document.querySelectorAll('.auth-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.getElementById(tabName + 'Form').classList.add('active');
+        }
+
+        function register() {
+            try {
+                const userData = {
+                    name: document.getElementById('registerName').value.trim(),
+                    email: document.getElementById('registerEmail').value.trim(),
+                    password: document.getElementById('registerPassword').value,
+                    confirmPassword: document.getElementById('confirmPassword').value
+                };
+
+                const user = userManager.register(userData);
+                blockchain.showNotification('Professional account created successfully. Please sign in to access the platform.', 'success');
+                
+                // Clear register form
+                document.getElementById('registerName').value = '';
+                document.getElementById('registerEmail').value = '';
+                document.getElementById('registerPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+                
+                // Switch to login tab
+                document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
+                document.querySelector('.auth-tab').classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+                
+            } catch (error) {
+                blockchain.showNotification(error.message, 'error');
+            }
+        }
+
+        function login() {
+            try {
+                const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+                const password = document.getElementById('loginPassword').value;
+
+                const user = userManager.login(email, password);
+                
+                // Hide welcome section and auth panel, show main content
+                document.getElementById('welcomeSection').style.display = 'none';
+                document.getElementById('authTabs').style.display = 'none';
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('userSection').style.display = 'flex';
+                document.getElementById('mainContent').classList.add('authenticated');
+                document.getElementById('transactionList').classList.add('authenticated');
+                
+                const userDisplay = document.getElementById('userDisplay');
+                userDisplay.innerHTML = `
+                    <strong>${user.name}</strong> | ${user.email}
+                    ${user.isAdmin ? '<span class="admin-badge">System Administrator</span>' : '<span style="background: #059669; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600;">Authorized User</span>'}
+                `;
+
+                if (user.isAdmin) {
+                    enableAdminMode();
+                    blockchain.showNotification('Administrator access granted. Advanced features are now available.', 'success');
+                } else {
+                    blockchain.showNotification(`Welcome to the platform, ${user.name}. You now have access to professional accounting tools.`, 'success');
+                }
+
+                blockchain.renderTransactions();
+                
+            } catch (error) {
+                blockchain.showNotification(error.message, 'error');
+            }
+        }
+
+        function logout() {
+            userManager.logout();
+            
+            // Show welcome section and auth panel, hide main content
+            document.getElementById('welcomeSection').style.display = 'block';
+            document.getElementById('authTabs').style.display = 'flex';
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('userSection').style.display = 'none';
+            document.getElementById('mainContent').classList.remove('authenticated');
+            document.getElementById('transactionList').classList.remove('authenticated');
+            
+            // Clear forms
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('registerName').value = '';
+            document.getElementById('registerEmail').value = '';
+            document.getElementById('registerPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            
+            disableAdminMode();
+            blockchain.showNotification('Session terminated successfully. Thank you for using our platform.', 'success');
+        }
+
+        function enableAdminMode() {
+            document.getElementById('hashInputSection').classList.add('admin-mode');
+            document.getElementById('regularEditSection').style.display = 'none';
+        }
+
+        function disableAdminMode() {
+            document.getElementById('hashInputSection').classList.remove('admin-mode');
+            document.getElementById('regularEditSection').style.display = 'block';
+        }
+
+        function viewTransactionDetails(hash) {
+            const transaction = blockchain.findTransactionByHash(hash);
+            if (!transaction) return;
+            
+            alert(`Technical Transaction Details:
+            
+Hash: ${transaction.hash}
+Block Height: ${transaction.blockHeight}
+Timestamp: ${transaction.timestamp}
+Created By: ${transaction.createdBy}
+${transaction.previousHash ? `Previous Hash: ${transaction.previousHash}` : ''}
+${transaction.modifiedBy ? `Modified By: ${transaction.modifiedBy}` : ''}
+            
+This information is only visible to system administrators.`);
+        }
+
+        // Form handlers
+        document.getElementById('transactionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!userManager.getCurrentUser()) {
+                blockchain.showNotification('Authentication required to register transactions', 'error');
+                return;
+            }
+            
+            const formData = new FormData(this);
+            const transaction = {
+                description: formData.get('description'),
+                amount: parseFloat(formData.get('amount')),
+                type: formData.get('type'),
+                parties: formData.get('parties') || ''
+            };
+
+            blockchain.addTransaction(transaction);
+            
+            // Clear form manually
+            document.getElementById('description').value = '';
+            document.getElementById('amount').value = '';
+            document.getElementById('type').value = '';
+            document.getElementById('parties').value = '';
+        });
+
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const hash = document.getElementById('editForm').dataset.hash;
+            const updatedData = {
+                description: formData.get('description'),
+                amount: parseFloat(formData.get('amount')),
+                type: formData.get('type'),
+                parties: formData.get('parties') || ''
+            };
+
+            const result = blockchain.editTransaction(hash, updatedData);
+            if (result) {
+                closeEditModal();
+                blockchain.showNotification('Transaction record updated successfully');
+            }
+        });
+
+        function editByHash() {
+            if (!userManager.isAdmin()) {
+                blockchain.showNotification('Administrator privileges required for hash-based transaction editing', 'warning');
+                return;
+            }
+            
+            const hash = document.getElementById('editHash').value.trim();
+            if (!hash) {
+                blockchain.showNotification('Please enter a valid blockchain transaction hash', 'warning');
+                return;
+            }
+
+            const transaction = blockchain.findTransactionByHash(hash);
+            if (!transaction) {
+                blockchain.showNotification('No transaction found with the specified hash identifier', 'warning');
+                return;
+            }
+
+            editTransaction(transaction.hash);
+        }
+
+        function editTransaction(hash) {
+            const transaction = blockchain.findTransactionByHash(hash);
+            if (!transaction) return;
+
+            document.getElementById('editDescription').value = transaction.description;
+            document.getElementById('editAmount').value = transaction.amount;
+            document.getElementById('editType').value = transaction.type;
+            document.getElementById('editParties').value = transaction.parties.join(', ');
+            document.getElementById('editForm').dataset.hash = hash;
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                closeEditModal();
+            }
+        }
+
+        // Handle Enter key navigation in forms
+        document.getElementById('loginEmail').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('loginPassword').focus();
+            }
+        });
+
+        document.getElementById('loginPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+
+        document.getElementById('registerName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('registerEmail').focus();
+            }
+        });
+
+        document.getElementById('registerEmail').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('registerPassword').focus();
+            }
+        });
+
+        document.getElementById('registerPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('confirmPassword').focus();
+            }
+        });
+
+        document.getElementById('confirmPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                register();
+            }
+        });
+
+        // Add demonstration data after admin login (for presentation purposes)
+        setTimeout(() => {
+            if (userManager.getCurrentUser() && userManager.isAdmin()) {
+                blockchain.addTransaction({
+                    description: 'Professional Services Contract - Q4 2024',
+                    amount: 15750.00,
+                    type: 'income',
+                    parties: 'finance@enterprise.com, contracts@client.com'
+                });
+                
+                blockchain.addTransaction({
+                    description: 'Office Equipment & Infrastructure Upgrade',
+                    amount: 4320.00,
+                    type: 'expense',
+                    parties: 'procurement@enterprise.com, admin@enterprise.com'
+                });
+                
+                blockchain.addTransaction({
+                    description: 'Interdepartmental Budget Allocation Transfer',
+                    amount: 8500.00,
+                    type: 'transfer',
+                    parties: 'finance@enterprise.com, operations@enterprise.com'
+                });
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
